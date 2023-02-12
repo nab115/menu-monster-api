@@ -15,7 +15,7 @@ client = get_db_client (
 
 @app.route('/')
 def home():
-    return { message: 'api endpoint for menuMonster'}
+    return { 'message': 'api endpoint for menuMonster'}
 
 @app.route('/api/itemsearch', methods=['Get', 'POST'])
 def menu_item_search():
