@@ -4,8 +4,7 @@ import os
 
 from utils import get_db_client
 
-port = os.environ.get('PORT') if os.environ.get('PORT') else 5000
-
+env = os.environ.get('PYTHON_ENV')
 app = Flask(__name__)
 
 client = get_db_client (
@@ -30,4 +29,9 @@ def menu_item_search():
     return restaurant
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port)
+    print(env)
+    if (env == 'development'):
+        app.run(port=5000)
+    else:
+        from waitress import serve
+        serve(app, host='0.0.0.0', port = os.environ.get('PORT'))
