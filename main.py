@@ -13,6 +13,10 @@ client = get_db_client (
     , os.environ.get('MONGODB_PASSWORD')
 )
 
+@app.route('/')
+def home():
+    return { message: 'api endpoint for menuMonster'}
+
 @app.route('/api/itemsearch', methods=['Get', 'POST'])
 def menu_item_search():
     db = client['Restaurants']
@@ -26,4 +30,4 @@ def menu_item_search():
     return restaurant
 
 if __name__ == '__main__':
-    app.run(port=port)
+    app.run(host='0.0.0.0', port=port)
