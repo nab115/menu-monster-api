@@ -68,8 +68,9 @@ def scraper():
     try:
         restaurant = create_restaurant_object(url, url, '', '')
         return restaurant
-    except:
+    except Exception as e:
         print('Error parsing ' + url)
+        print(e)
         return f'Error parsing {url}', 400
 
 if __name__ == '__main__':
