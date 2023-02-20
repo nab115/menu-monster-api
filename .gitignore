@@ -4,3 +4,6 @@
 # compile
 *.pyc
 
+#shortcuts
+*.cmd
+

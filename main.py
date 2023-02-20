@@ -3,6 +3,7 @@ from flask import request
 import os
 
 from utils import get_db_client
+from match import get_matching_items
 
 env = os.environ.get('PYTHON_ENV')
 app = Flask(__name__)
@@ -16,17 +17,42 @@ client = get_db_client (
 def home():
     return { 'message': 'api endpoint for menuMonster'}
 
-@app.route('/api/itemsearch', methods=['Get', 'POST'])
+@app.route('/itemsearch', methods=['POST'])
 def menu_item_search():
     db = client['Restaurants']
     col = db['restaurants']
 
-    if request.method == 'POST':
-        print(request.json['city'])
-    
-    restaurant = col.find_one({}, {'_id': False})
+    try:
+        city = request.json['city']
+        item = request.json['item']
+    except:
+        print('Bad Request : city and or item not sent')
 
-    return restaurant
+    restaurants = col.find({'city': city}, {'_id': False})
+
+    return get_matching_items(restaurants, item)
+
+@app.route('/locations', methods=['GET'])
+def get_locations():
+    db = client['Restaurants']
+    col = db['restaurants']
+
+    cities = col.distinct('city')
+
+    return sorted(cities)
+
+@app.route('/locationsearch', methods=['POST'])
+def location_search():
+    db = client['Restaurants']
+    col = db['restaurants']
+
+    try:
+        city = request.json['city']
+    except:
+        print('Bad Request : city not sent')
+
+    restaurants = col.find({'city': city}, {'_id': False})
+    return [r for r in restaurants]
 
 if __name__ == '__main__':
     print(env)
