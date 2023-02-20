@@ -55,7 +55,6 @@ def location_search():
     return [r for r in restaurants]
 
 if __name__ == '__main__':
-    print(env)
     if (env == 'development'):
         app.run(port=5000)
     else:

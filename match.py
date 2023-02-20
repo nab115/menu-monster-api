@@ -17,5 +17,4 @@ def get_matching_items(restaurants, target):
 
 def _is_match(target, item_name):
     match_ = item_name.find(target)
-    print(target + ' ' + item_name + ' ' + str(match_))
     return match_
