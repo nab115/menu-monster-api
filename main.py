@@ -1,10 +1,11 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request
 import os
+import traceback
 
 from utils import get_db_client
 from match import get_matching_items
 from menu_scraper import create_restaurant_object
+from waitress import serve
 
 env = os.environ.get('PYTHON_ENV')
 app = Flask(__name__)
@@ -71,11 +72,19 @@ def scraper():
     except Exception as e:
         print('Error parsing ' + url)
         print(e)
+        traceback.print_exc()
         return f'Error parsing {url}', 400
 
 if __name__ == '__main__':
     if (env == 'development'):
-        app.run(port=5000)
+        app.run(port=5000, threaded=False)
     else:
-        from waitress import serve
-        serve(app, host='0.0.0.0', port = os.environ.get('PORT'))
+        # TODO - read this thread 
+        # https://stackoverflow.com/questions/58585219/requests-html-runtimeerror-there-is-no-current-event-loop-in-thread-thread-1
+        # understand the issue here with threading and fix this issue with
+        # a better solution. I dont think using threaded=False and the
+        # development server is good
+
+        # threaded=False fixes the [There is no current event loop in thread ..]
+        # issue with using requests_html and flask
+        app.run(host='0.0.0.0', port=os.environ.get('PORT'), threaded=False)
