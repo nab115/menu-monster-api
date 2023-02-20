@@ -60,18 +60,17 @@ def scraper():
     db = client['Restaurants']
     col = db['restaurants']
 
-    try:
+    try: 
         url = request.json['url']
-        try:
-            restaurant = create_restaurant_object(url, url, '', '')
-            return restaurant
-        except(e):
-            print(url + ' did not work')
-            print(e.message)
     except:
-        print('Bad Request : url not sent')
-    
-    return {}
+        return 'Bad Request, url not sent', 400
+
+    try:
+        restaurant = create_restaurant_object(url, url, '', '')
+        return restaurant
+    except:
+        print('Error parsing ' + url)
+        return f'Error parsing {url}', 400
 
 if __name__ == '__main__':
     if (env == 'development'):
